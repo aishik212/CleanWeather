@@ -1,6 +1,9 @@
 package com.textsdev.cleanweatherapp_mvvm.utils
 
 import android.annotation.SuppressLint
+import android.graphics.Color
+import android.view.View
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -35,4 +38,15 @@ fun Date.getDayOfWeek(): String {
         Calendar.SATURDAY -> "Saturday"
         else -> throw IllegalArgumentException("Invalid day of week")
     }
+}
+
+fun showSnackBar(text: String, view: View, function: () -> Unit) {
+    Snackbar.make(view, text, Snackbar.LENGTH_LONG)
+        .setTextColor(Color.WHITE)
+        .setBackgroundTint(Color.BLACK)
+        .setActionTextColor(Color.RED)
+        .setAction("RETRY") {
+            function()
+        }
+        .show()
 }

@@ -6,11 +6,11 @@ import android.view.View.VISIBLE
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.textsdev.cleanweatherapp_mvvm.adapter.ForecastAdapter
 import com.textsdev.cleanweatherapp_mvvm.data.model.CurrentWeatherOfflineModel
 import com.textsdev.cleanweatherapp_mvvm.databinding.ActivityMainBinding
 import com.textsdev.cleanweatherapp_mvvm.ui.viewmodel.WeatherViewModel
+import com.textsdev.cleanweatherapp_mvvm.utils.showSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 
@@ -54,10 +54,9 @@ class MainActivity : AppCompatActivity() {
             } else {
                 binding.mainLayout.visibility = GONE
                 //Could've showed separate message for each error, didn't add it due to time constraint
-                Snackbar.make(binding.root, "Something went wrong", Snackbar.LENGTH_LONG)
-                    .setAction("RETRY") {
-                        viewModel.fetchWeather("Bengaluru")
-                    }.show()
+                showSnackBar("Something went wrong", binding.root) {
+                    viewModel.fetchWeather("Bengaluru")
+                }
             }
         }
 
@@ -69,19 +68,15 @@ class MainActivity : AppCompatActivity() {
                         binding.currentTempTv.text = it
                     }
                 } ?: run {
-                    Snackbar.make(
-                        binding.root,
-                        "Unable to show current weather",
-                        Snackbar.LENGTH_LONG
-                    ).setAction("RETRY") {
+                    showSnackBar("Unable to show current weather", binding.root) {
                         viewModel.fetchWeather("Bengaluru")
-                    }.show()
+                    }
                 }
             } catch (e: Exception) {
-                Snackbar.make(binding.root, "Unable to show current weather", Snackbar.LENGTH_LONG)
-                    .setAction("RETRY") {
-                        viewModel.fetchWeather("Bengaluru")
-                    }.show()
+                showSnackBar("Unable to show current weather", binding.root) {
+                    viewModel.fetchWeather("Bengaluru")
+                }
+
             }
 
         }
