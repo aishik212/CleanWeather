@@ -7,11 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.textsdev.cleanweatherapp_mvvm.data.model.CurrentWeatherOfflineModel
 import com.textsdev.cleanweatherapp_mvvm.data.model.WeatherForecastOfflineModel
 import com.textsdev.cleanweatherapp_mvvm.data.repository.WeatherRepository
+import com.textsdev.cleanweatherapp_mvvm.data.repository.WeatherResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -28,46 +27,48 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: MutableLiveData<Boolean> get() = _isLoading
 
-    private val _error = MutableLiveData<Throwable>()
-    val error: LiveData<Throwable> get() = _error
+    private val _error = MutableLiveData<Throwable?>()
+    val error: LiveData<Throwable?> get() = _error
 
     init {
-        getCurrentWeather("Bengaluru")
-        getWeatherForecast("Bengaluru")
+        fetchWeather("Bengaluru")
     }
 
-    fun getCurrentWeather(cityName: String) {
+    fun fetchWeather(cityName: String) {
         startLoading()
         viewModelScope.launch {
-            //Added Delay to show loader
+            // Added delay to show loader
             delay(500)
             try {
-                val weatherData = withContext(Dispatchers.IO) {
-                    weatherRepository.getCurrentWeather(cityName)
-                }
-                _weather.value = weatherData
-                stopLoading()
-            } catch (e: Exception) {
-                stopLoading()
-                _error.value = e
-            }
-        }
-    }
+                clearError()
+                when (val currentWeather = weatherRepository.getCurrentWeather(cityName)) {
+                    is WeatherResult.Success -> {
+                        val weatherForecast = weatherRepository.getWeatherForecast(cityName)
+                        when (weatherForecast) {
+                            is WeatherResult.Success -> {
+                                // Handle successful result
+                                // If All success then show data
+                                _weather.value = currentWeather.data
+                                _weatherForecast.value = weatherForecast.data
+                            }
 
-    fun getWeatherForecast(cityName: String) {
-        startLoading()
-        viewModelScope.launch {
-            //Added Delay to show loader
-            delay(500)
-            try {
-                val weatherData = withContext(Dispatchers.IO) {
-                    weatherRepository.getWeatherForecast(cityName)
+                            is WeatherResult.Error -> {
+                                _error.value = Throwable(weatherForecast.message)
+                                // Handle error
+                            }
+                        }
+
+                    }
+
+                    is WeatherResult.Error -> {
+                        _error.value = Throwable(currentWeather.message)
+                        // Handle error
+                    }
                 }
-                _weatherForecast.value = weatherData
-                stopLoading()
             } catch (e: Exception) {
-                stopLoading()
                 _error.value = e
+            } finally {
+                stopLoading()
             }
         }
     }
@@ -78,5 +79,9 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
 
     fun stopLoading() {
         _isLoading.value = false
+    }
+
+    fun clearError() {
+        _error.value = null
     }
 }
