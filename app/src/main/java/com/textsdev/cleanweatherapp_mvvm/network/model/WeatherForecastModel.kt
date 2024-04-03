@@ -7,13 +7,13 @@ data class WeatherForecastModel(
     @SerializedName("city")
     val city: City,
     @SerializedName("cnt")
-    val cnt: Int, // 40
+    val cnt: Int, // 7
     @SerializedName("cod")
     val cod: String, // 200
     @SerializedName("list")
-    val list: List<WeatherForecastItems>,
+    val list: List<WeatherForecastItem>,
     @SerializedName("message")
-    val message: Int // 0
+    val message: Double // 10.6724913
 ) {
     data class City(
         @SerializedName("coord")
@@ -26,10 +26,6 @@ data class WeatherForecastModel(
         val name: String, // Bengaluru
         @SerializedName("population")
         val population: Int, // 5104047
-        @SerializedName("sunrise")
-        val sunrise: Int, // 1712105054
-        @SerializedName("sunset")
-        val sunset: Int, // 1712149263
         @SerializedName("timezone")
         val timezone: Int // 19800
     ) {
@@ -41,75 +37,69 @@ data class WeatherForecastModel(
         )
     }
 
-    data class WeatherForecastItems(
+    data class WeatherForecastItem(
         @SerializedName("clouds")
-        val clouds: Clouds,
+        val clouds: Int, // 13
+        @SerializedName("deg")
+        val deg: Int, // 124
         @SerializedName("dt")
-        val dt: Int, // 1712134800
-        @SerializedName("dt_txt")
-        val dtTxt: String, // 2024-04-03 09:00:00
-        @SerializedName("main")
-        val main: Main,
+        val dt: Int, // 1712125800
+        @SerializedName("feels_like")
+        val feelsLike: FeelsLike,
+        @SerializedName("gust")
+        val gust: Double, // 10.96
+        @SerializedName("humidity")
+        val humidity: Int, // 27
         @SerializedName("pop")
         val pop: Int, // 0
-        @SerializedName("sys")
-        val sys: Sys,
-        @SerializedName("visibility")
-        val visibility: Int, // 10000
+        @SerializedName("pressure")
+        val pressure: Int, // 1012
+        @SerializedName("speed")
+        val speed: Double, // 5.4
+        @SerializedName("sunrise")
+        val sunrise: Int, // 1712105054
+        @SerializedName("sunset")
+        val sunset: Int, // 1712149263
+        @SerializedName("temp")
+        val temp: Temp,
         @SerializedName("weather")
-        val weather: List<Weather>,
-        @SerializedName("wind")
-        val wind: Wind
+        val weather: List<Weather>
     ) {
-        data class Clouds(
-            @SerializedName("all")
-            val all: Int // 8
+        data class FeelsLike(
+            @SerializedName("day")
+            val day: Double, // 305.15
+            @SerializedName("eve")
+            val eve: Double, // 305.88
+            @SerializedName("morn")
+            val morn: Double, // 295.64
+            @SerializedName("night")
+            val night: Double // 299.92
         )
 
-        data class Main(
-            @SerializedName("feels_like")
-            val feelsLike: Double, // 305.72
-            @SerializedName("grnd_level")
-            val grndLevel: Int, // 911
-            @SerializedName("humidity")
-            val humidity: Int, // 35
-            @SerializedName("pressure")
-            val pressure: Int, // 1014
-            @SerializedName("sea_level")
-            val seaLevel: Int, // 1014
-            @SerializedName("temp")
-            val temp: Double, // 305.98
-            @SerializedName("temp_kf")
-            val tempKf: Double, // -3.03
-            @SerializedName("temp_max")
-            val tempMax: Double, // 309.01
-            @SerializedName("temp_min")
-            val tempMin: Double // 305.98
-        )
-
-        data class Sys(
-            @SerializedName("pod")
-            val pod: String // d
+        data class Temp(
+            @SerializedName("day")
+            val day: Double, // 306.49
+            @SerializedName("eve")
+            val eve: Double, // 307.66
+            @SerializedName("max")
+            val max: Double, // 307.7
+            @SerializedName("min")
+            val min: Double, // 295.43
+            @SerializedName("morn")
+            val morn: Double, // 295.73
+            @SerializedName("night")
+            val night: Double // 300.63
         )
 
         data class Weather(
             @SerializedName("description")
-            val description: String, // clear sky
+            val description: String, // few clouds
             @SerializedName("icon")
-            val icon: String, // 01d
+            val icon: String, // 02d
             @SerializedName("id")
-            val id: Int, // 800
+            val id: Int, // 801
             @SerializedName("main")
-            val main: String // Clear
-        )
-
-        data class Wind(
-            @SerializedName("deg")
-            val deg: Int, // 101
-            @SerializedName("gust")
-            val gust: Double, // 5.14
-            @SerializedName("speed")
-            val speed: Double // 4.8
+            val main: String // Clouds
         )
     }
 }

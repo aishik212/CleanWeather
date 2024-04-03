@@ -73,15 +73,15 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
         }
     }
 
-    fun startLoading() {
+    private fun startLoading() {
         _isLoading.value = true
     }
 
-    fun stopLoading() {
+    private fun stopLoading() {
         _isLoading.value = false
     }
 
-    fun clearError() {
+    private fun clearError() {
         _error.value = null
     }
 }

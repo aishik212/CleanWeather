@@ -14,7 +14,7 @@ interface WeatherApiService {
         @Query("units") units: String = "metric",
     ): Response<CurrentWeatherModel>
 
-    @GET("forecast")
+    @GET("forecast/daily")
     suspend fun getWeatherForecast(
         @Query("q") cityName: String,
         @Query("appid") apiKey: String,

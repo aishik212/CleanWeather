@@ -4,6 +4,7 @@ import com.textsdev.cleanweatherapp_mvvm.BuildConfig
 import com.textsdev.cleanweatherapp_mvvm.data.model.CurrentWeatherOfflineModel
 import com.textsdev.cleanweatherapp_mvvm.data.model.WeatherForecastOfflineModel
 import com.textsdev.cleanweatherapp_mvvm.network.WeatherApiService
+import kotlin.math.roundToInt
 
 class WeatherRepositoryImpl(private val apiService: WeatherApiService) : WeatherRepository {
     override suspend fun getCurrentWeather(cityName: String): WeatherResult<CurrentWeatherOfflineModel> {
@@ -31,7 +32,7 @@ class WeatherRepositoryImpl(private val apiService: WeatherApiService) : Weather
                 weatherResponse?.list?.map {
                     WeatherForecastOfflineModel(
                         date = it.dt,
-                        temp = it.main.temp,
+                        temp = it.temp.day.roundToInt(),
                     )
                 } ?: emptyList()
             WeatherResult.Success(weatherForecastOfflineModelList)
